@@ -1367,8 +1367,65 @@ function ScreenHome({ goAdd, goItem, goWardrobe, goWardrobeMode, goSearch, goNot
             border: '0.5px solid var(--hairline-strong, rgba(var(--fg-rgb, 244,239,230), 0.08))',
             borderRadius: 18, overflow: 'hidden', position: 'relative',
           }}>
-            {/* Top: fit ring (left) + wears/items stack (right) */}
-            <div style={{ height: 22 }} />
+            {/* Top: Today's pick eyebrow + outfit name (left) + fit ring (right) */}
+            <div style={{ padding: '20px 22px 18px', display: 'flex', alignItems: 'center', gap: 14 }}>
+              <div style={{ flex: 1, minWidth: 0 }}>
+                <Eyebrow style={{ marginBottom: 6 }}>Today's pick</Eyebrow>
+                <Display size={24} italic style={{ lineHeight: 1.05 }}>Quiet authority</Display>
+              </div>
+              {(() => {
+                const score = 92;
+                const SIZE = 64;
+                const CX = SIZE / 2;
+                const r = 26;
+                const C = 2 * Math.PI * r;
+                const dash = (score / 100) * C;
+                return (
+                  <div style={{ position: 'relative', width: SIZE, height: SIZE, flexShrink: 0 }}>
+                    <svg width={SIZE} height={SIZE} viewBox={`0 0 ${SIZE} ${SIZE}`} style={{ display: 'block' }}>
+                      <defs>
+                        <linearGradient id="fitGradTop" x1="0%" y1="0%" x2="100%" y2="100%">
+                          <stop offset="0%"   stopColor="#E36F55" />
+                          <stop offset="100%" stopColor="#A33B26" />
+                        </linearGradient>
+                      </defs>
+                      <circle cx={CX} cy={CX} r={r} fill="none"
+                        stroke="rgba(var(--fg-rgb, 244,239,230), 0.18)" strokeWidth="4" />
+                      <circle cx={CX} cy={CX} r={r} fill="none"
+                        stroke="url(#fitGradTop)" strokeWidth="4" strokeLinecap="round"
+                        strokeDasharray={`${dash} ${C - dash}`}
+                        strokeDashoffset={C / 4}
+                        transform={`rotate(-90 ${CX} ${CX})`} />
+                    </svg>
+                    <button
+                      onClick={(e) => { e.stopPropagation(); setShowFitInfo(true); }}
+                      aria-label="How is fit calculated?"
+                      style={{
+                        position: 'absolute', inset: 0,
+                        appearance: 'none', border: 0, background: 'transparent', cursor: 'pointer',
+                        display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center',
+                        padding: 0, lineHeight: 1,
+                      }}>
+                      <span style={{
+                        fontFamily: 'var(--ui-font)',
+                        fontSize: 7.5, letterSpacing: '0.18em', textTransform: 'uppercase',
+                        color: 'rgba(200,85,61,0.85)', marginBottom: 2,
+                      }}>Fit</span>
+                      <div style={{ display: 'flex', alignItems: 'baseline' }}>
+                        <span style={{
+                          fontFamily: 'var(--display-font, "EB Garamond", serif)',
+                          fontSize: 22, fontStyle: 'italic', fontWeight: 600, color: 'var(--fg, #F4EFE6)', lineHeight: 1,
+                        }}>{score}</span>
+                        <span style={{
+                          fontFamily: 'var(--display-font, "EB Garamond", serif)',
+                          fontSize: 9, color: 'rgba(var(--fg-rgb, 244,239,230), 0.55)', marginLeft: 1,
+                        }}>%</span>
+                      </div>
+                    </button>
+                  </div>
+                );
+              })()}
+            </div>
 
             {/* product grid — tap to reveal location of that item in the closet */}
             <div style={{
@@ -1451,63 +1508,6 @@ function ScreenHome({ goAdd, goItem, goWardrobe, goWardrobeMode, goSearch, goNot
 
             <div style={{ height: 18 }} />
 
-            {/* Outfit name + fit ring — bottom row */}
-            <div style={{ padding: '0 22px 16px', display: 'flex', alignItems: 'center', gap: 14 }}>
-              <Display size={24} italic style={{ flex: 1, minWidth: 0 }}>Quiet authority</Display>
-              {(() => {
-                const score = 92;
-                const SIZE = 64;
-                const CX = SIZE / 2;
-                const r = 26;
-                const C = 2 * Math.PI * r;
-                const dash = (score / 100) * C;
-                return (
-                  <div style={{ position: 'relative', width: SIZE, height: SIZE, flexShrink: 0 }}>
-                    <svg width={SIZE} height={SIZE} viewBox={`0 0 ${SIZE} ${SIZE}`} style={{ display: 'block' }}>
-                      <defs>
-                        <linearGradient id="fitGradSm" x1="0%" y1="0%" x2="100%" y2="100%">
-                          <stop offset="0%"   stopColor="#E36F55" />
-                          <stop offset="100%" stopColor="#A33B26" />
-                        </linearGradient>
-                      </defs>
-                      <circle cx={CX} cy={CX} r={r} fill="none"
-                        stroke="rgba(var(--fg-rgb, 244,239,230), 0.18)" strokeWidth="4" />
-                      <circle cx={CX} cy={CX} r={r} fill="none"
-                        stroke="url(#fitGradSm)" strokeWidth="4" strokeLinecap="round"
-                        strokeDasharray={`${dash} ${C - dash}`}
-                        strokeDashoffset={C / 4}
-                        transform={`rotate(-90 ${CX} ${CX})`} />
-                    </svg>
-                    <button
-                      onClick={(e) => { e.stopPropagation(); setShowFitInfo(true); }}
-                      aria-label="How is fit calculated?"
-                      style={{
-                        position: 'absolute', inset: 0,
-                        appearance: 'none', border: 0, background: 'transparent', cursor: 'pointer',
-                        display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center',
-                        padding: 0, lineHeight: 1,
-                      }}>
-                      <span style={{
-                        fontFamily: 'var(--ui-font)',
-                        fontSize: 7.5, letterSpacing: '0.18em', textTransform: 'uppercase',
-                        color: 'rgba(200,85,61,0.85)', marginBottom: 2,
-                      }}>Fit</span>
-                      <div style={{ display: 'flex', alignItems: 'baseline' }}>
-                        <span style={{
-                          fontFamily: 'var(--display-font, "EB Garamond", serif)',
-                          fontSize: 22, fontStyle: 'italic', fontWeight: 600, color: 'var(--fg, #F4EFE6)', lineHeight: 1,
-                        }}>{score}</span>
-                        <span style={{
-                          fontFamily: 'var(--display-font, "EB Garamond", serif)',
-                          fontSize: 9, color: 'rgba(var(--fg-rgb, 244,239,230), 0.55)', marginLeft: 1,
-                        }}>%</span>
-                      </div>
-                    </button>
-                  </div>
-                );
-              })()}
-            </div>
-
             {/* CTA row */}
             <div style={{
               display: 'flex', borderTop: '0.5px solid var(--hairline-strong, rgba(var(--fg-rgb, 244,239,230), 0.08))',
@@ -1554,6 +1554,49 @@ function ScreenHome({ goAdd, goItem, goWardrobe, goWardrobeMode, goSearch, goNot
                 fontFamily: 'var(--ui-font)', fontSize: 13.5, lineHeight: 1.5,
                 color: 'var(--fg-2, rgba(var(--fg-rgb, 244,239,230), 0.7))',
               }}>Lydia weighs your style profile, the day's events, and the local weather to gauge how well an outfit fits the moment.</div>
+
+              {/* Breakdown */}
+              <div style={{
+                marginTop: 18, paddingTop: 16,
+                borderTop: '0.5px solid var(--hairline, rgba(var(--fg-rgb, 244,239,230), 0.08))',
+                display: 'flex', flexDirection: 'column', gap: 12,
+              }}>
+                {[
+                  { label: 'Style profile', value: 96, note: 'Tailored · neutral palette' },
+                  { label: 'Event match',   value: 94, note: 'Client meeting · 11 AM' },
+                  { label: 'Weather',       value: 88, note: '18° · light wind' },
+                  { label: 'Wear cadence',  value: 90, note: 'All items rested 7d+' },
+                ].map((row, i) => (
+                  <div key={i} style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
+                    <div style={{ flex: 1, minWidth: 0 }}>
+                      <div style={{
+                        fontFamily: 'Inter Tight, system-ui', fontSize: 12.5, fontWeight: 500,
+                        color: 'var(--fg, #F4EFE6)', lineHeight: 1.2,
+                      }}>{row.label}</div>
+                      <div style={{
+                        fontFamily: 'var(--ui-font)',
+                        fontSize: 9, letterSpacing: '0.10em', textTransform: 'uppercase',
+                        color: 'var(--fg-2, rgba(var(--fg-rgb, 244,239,230), 0.55))',
+                        marginTop: 3,
+                      }}>{row.note}</div>
+                    </div>
+                    <div style={{ width: 56, height: 3, borderRadius: 999, background: 'rgba(var(--fg-rgb, 244,239,230), 0.10)', overflow: 'hidden', flexShrink: 0 }}>
+                      <div style={{
+                        width: `${row.value}%`, height: '100%',
+                        background: 'linear-gradient(90deg, #E36F55, #A33B26)',
+                        borderRadius: 999,
+                      }} />
+                    </div>
+                    <div style={{
+                      width: 28, textAlign: 'right',
+                      fontFamily: 'var(--display-font, "EB Garamond", serif)',
+                      fontStyle: 'italic', fontWeight: 500, fontSize: 17,
+                      color: 'var(--fg, #F4EFE6)', lineHeight: 1, flexShrink: 0,
+                    }}>{row.value}</div>
+                  </div>
+                ))}
+              </div>
+
               <button onClick={() => setShowFitInfo(false)} style={{
                 appearance: 'none', border: 0, cursor: 'pointer', marginTop: 18,
                 background: 'var(--fg, #F4EFE6)', color: 'var(--bg, #0A0908)',
