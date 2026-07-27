@@ -13169,12 +13169,12 @@ function ScreenResell({ goBack, goItem }) {
 
   // Resell candidates — surfaced by RFID (180+ days unworn, not archived).
   const candidates = [
-    { id: 'item-13', brand: 'Totême', item: 'Silk blouse',     days: 184, est: 280, photo: IMG['item-13'], tone: 'bone' },
-    { id: 'item-0',  brand: 'Sandro', item: 'Pleated midi',    days: 192, est: 195, photo: IMG['item-0'],  tone: 'sky' },
-    { id: 'item-5',    brand: 'COS',    item: 'Tailored blazer', days: 201, est: 120, photo: IMG['item-5'],    tone: 'bone' },
-    { id: 'mango-silk',    brand: 'Mango',  item: 'Linen shirt',     days: 215, est: 65,  photo: null,                       tone: 'sand' },
-    { id: 'sezane-boots',  brand: 'Sézane', item: 'Ankle boots',     days: 232, est: 210, photo: null,                       tone: 'rose' },
-    { id: 'item-4',       brand: 'A.P.C.', item: 'Half moon bag',   days: 248, est: 175, photo: IMG['item-4'],        tone: 'sand' },
+    { id: 'item-13', brand: 'Agua by Agua Bendita', item: 'Pleated floral-printed linen blouse', days: 184, est: 280, photo: IMG['item-13'], tone: 'rose' },
+    { id: 'item-0',  brand: 'Doen', item: 'Safia smocked maxi dress', days: 192, est: 195, photo: IMG['item-0'],  tone: 'sky' },
+    { id: 'item-5',  brand: 'Dries van Noten', item: 'Striped twill blazer', days: 201, est: 420, photo: IMG['item-5'], tone: 'bone' },
+    { id: 'item-19', brand: 'Nour Hammour', item: 'Passage leather jacket', days: 215, est: 650, photo: IMG['item-19'], tone: 'sand' },
+    { id: 'item-20', brand: 'The Row', item: "90's small leather tote", days: 232, est: 470, photo: IMG['item-20'], tone: 'ember' },
+    { id: 'item-4',  brand: 'Jil Sander', item: 'Small embellished leather shoulder bag', days: 248, est: 340, photo: IMG['item-4'], tone: 'ember' },
   ];
   const [selected, setSelected] = React.useState({});
   const selectedIds = Object.keys(selected).filter(k => selected[k]);
@@ -13313,9 +13313,9 @@ function ScreenResell({ goBack, goItem }) {
             <Eyebrow size={9} style={{ marginBottom: 12 }}>{SHOP_TABS.find(x => x.id === shopTab).label} listings · {SHOP_LISTINGS[shopTab].length}</Eyebrow>
             <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: 10 }}>
               {SHOP_LISTINGS[shopTab].map(l => (
-                <div key={l.id} style={{ position: 'relative' }}>
+                <div key={l.id} style={{ position: 'relative', minWidth: 0 }}>
                   <div style={{ position: 'relative' }}>
-                    <PlaceholderCard brand={l.brand} item={l.item} tone={l.tone} ratio="3/4" photo={l.photo} />
+                    <PlaceholderCard brand={l.brand} item={l.item} tone={l.tone} ratio="3/4" photo={l.photo} photoId={l.id} />
                     {/* Status pill top-left */}
                     <div style={{
                       position: 'absolute', top: 6, left: 6,
@@ -13386,14 +13386,14 @@ function ScreenResell({ goBack, goItem }) {
                   return (
                     <button key={c.id} onClick={() => setSelected(s => ({ ...s, [c.id]: !s[c.id] }))} style={{
                       appearance: 'none', cursor: 'pointer', textAlign: 'left', padding: 0, border: 0, background: 'transparent',
-                      position: 'relative',
+                      position: 'relative', minWidth: 0,
                     }}>
                       <div style={{
                         position: 'relative', borderRadius: 12, overflow: 'hidden',
                         outline: on ? `2px solid ${TEAL}` : '0.5px solid rgba(var(--fg-rgb, 244,239,230), 0.06)',
                         outlineOffset: on ? '-2px' : '0',
                       }}>
-                        <PlaceholderCard brand={c.brand} item={c.item} tone={c.tone} ratio="4/5" photo={c.photo} />
+                        <PlaceholderCard brand={c.brand} item={c.item} tone={c.tone} ratio="4/5" photo={c.photo} photoId={c.id} />
                         {/* Checkbox top-right */}
                         <div style={{
                           position: 'absolute', top: 8, right: 8,
@@ -13621,7 +13621,7 @@ function ScreenResell({ goBack, goItem }) {
                       display: 'flex', alignItems: 'center', gap: 12, width: '100%',
                     }}>
                       <div style={{ width: 56, flexShrink: 0 }}>
-                        <PlaceholderCard brand={c.brand} item={c.item} tone={c.tone} ratio="3/4" photo={c.photo} />
+                        <PlaceholderCard brand={c.brand} item={c.item} tone={c.tone} ratio="3/4" photo={c.photo} photoId={c.id} />
                       </div>
                       <div style={{ flex: 1, minWidth: 0 }}>
                         <div style={{ fontFamily: 'var(--display-font, "EB Garamond", serif)', fontStyle: 'italic', fontSize: 16, color: 'var(--fg, #F4EFE6)', lineHeight: 1.1 }}>{c.brand}</div>
