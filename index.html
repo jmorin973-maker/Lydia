@@ -10659,10 +10659,10 @@ function ScreenLists({ goSearch, goNotifications, goProfile, initialListId, goBa
                     <div onClick={() => setMenuListId(null)} style={{ position: 'fixed', inset: 0, zIndex: 50 }} />
                     <div style={{
                       position: 'absolute', top: 52, right: 12, zIndex: 51,
-                      background: '#1F1B16',
-                      border: '0.5px solid rgba(var(--fg-rgb, 244,239,230), 0.12)',
+                      background: 'var(--bg-elev, #1F1B16)',
+                      border: '0.5px solid var(--hairline, rgba(var(--fg-rgb, 244,239,230), 0.12))',
                       borderRadius: 12, minWidth: 180,
-                      boxShadow: '0 12px 36px rgba(0,0,0,0.4)',
+                      boxShadow: '0 12px 36px rgba(0,0,0,0.24)',
                       overflow: 'hidden',
                       animation: 'listMenuIn 0.16s ease-out',
                     }}>
@@ -10837,7 +10837,7 @@ function ContextMenuItem({ icon, label, danger, onClick }) {
       padding: '12px 14px',
       display: 'flex', alignItems: 'center', gap: 12,
       color: danger ? '#C8553D' : 'var(--fg, #F4EFE6)',
-      borderBottom: '0.5px solid rgba(var(--fg-rgb, 244,239,230), 0.05)',
+      borderBottom: '0.5px solid var(--hairline, rgba(var(--fg-rgb, 244,239,230), 0.05))',
       fontFamily: 'Inter Tight, system-ui', fontSize: 14, fontWeight: 600, lineHeight: 1.2,
     }}>
       <Icon name={icon} size={14} color={danger ? '#C8553D' : 'rgba(var(--fg-rgb, 244,239,230), 0.7)'} stroke={1.5} />
