@@ -6121,39 +6121,24 @@ function ScreenDeletedItems({ goBack, deleted = [], onRestore, onPurge }) {
 // Outfit library — shared across Plan-week swap + Outfits screen.
 // Photos use the same IMG keys as the Outfits collections.
 const OUTFIT_LIBRARY = [
-  // Work
-  { id: 'lib-work-1', name: 'Quiet authority', tag: 'Work', season: 'Spring · Summer', img: typeof IMG !== 'undefined' ? IMG['low-key-3.jpeg'] : null, score: 92, tones: ['bone','sand','cream','noir'], pieceIds: ['item-13','item-10','item-30','item-4'] },
-  { id: 'lib-work-2', name: 'Soft authority', tag: 'Work', season: 'Spring · Summer', img: typeof IMG !== 'undefined' ? IMG['in-transit-2.jpeg'] : null, score: 91, tones: ['bone','sand','cream','sand'], pieceIds: ['item-5','item-13','item-10','item-30'] },
-  { id: 'lib-work-3', name: 'Considered Thursday', tag: 'Work', season: 'Fall · Winter', img: typeof IMG !== 'undefined' ? IMG['after-dark-3.jpeg'] : null, score: 88, tones: ['noir','sage','cream','bone'], pieceIds: ['item-5','item-13','item-10','item-30','item-4'] },
-  // Casual
-  { id: 'lib-cas-1', name: 'Effortless Wednesday', tag: 'Casual', season: 'Spring · Summer', img: typeof IMG !== 'undefined' ? IMG['low-key-1.jpeg'] : null, score: 84, tones: ['cream','sand','rose','bone'], pieceIds: ['item-31','item-14','item-30','item-23'] },
-  { id: 'lib-cas-2', name: 'Saturday errands', tag: 'Casual', season: 'Spring · Summer', img: typeof IMG !== 'undefined' ? IMG['low-key-1.jpeg'] : null, score: 79, tones: ['sand','cream','sage','bone'], pieceIds: ['item-31','item-14','item-30','item-4'] },
-  { id: 'lib-cas-3', name: 'Coffee with Anna', tag: 'Casual', season: 'Spring · Summer', img: typeof IMG !== 'undefined' ? IMG['low-key-2.jpeg'] : null, score: 83, tones: ['rose','cream','sand','bone'], pieceIds: ['item-0','item-19','item-21','item-23'] },
-  // Weekend
-  { id: 'lib-wkd-1', name: 'Slow Sunday', tag: 'Weekend', season: 'Spring · Summer', img: typeof IMG !== 'undefined' ? IMG['low-key-3.jpeg'] : null, score: 86, tones: ['cream','sand','bone','sage'], pieceIds: ['item-13','item-14','item-30','item-23'] },
-  { id: 'lib-wkd-2', name: 'Beach house', tag: 'Weekend', season: 'Spring · Summer', img: typeof IMG !== 'undefined' ? IMG['low-key-4.jpeg'] : null, score: 81, tones: ['cream','sand','bone','rose'], pieceIds: ['item-31','item-13','item-14','item-30','item-4'] },
-  // Evening
-  { id: 'lib-eve-1', name: 'The dinner column', tag: 'Evening', season: 'Fall · Winter', img: typeof IMG !== 'undefined' ? IMG['after-dark-1.jpeg'] : null, score: 91, tones: ['bone','noir','cream','sand'], pieceIds: ['item-13','item-10','item-21','item-6'] },
-  { id: 'lib-eve-2', name: 'Off the cuff', tag: 'Evening', season: 'Fall · Winter', img: typeof IMG !== 'undefined' ? IMG['after-dark-2.jpeg'] : null, score: 88, tones: ['ember','sand','noir','cream'], pieceIds: ['item-0','item-21','item-23'] },
-  { id: 'lib-eve-3', name: 'Late table', tag: 'Evening', season: 'Fall · Winter', img: typeof IMG !== 'undefined' ? IMG['after-dark-3.jpeg'] : null, score: 86, tones: ['noir','bone','cream','sand'], pieceIds: ['item-5','item-13','item-10','item-30','item-4'] },
-  { id: 'lib-eve-4', name: 'Quiet champagne', tag: 'Evening', season: 'Fall · Winter', img: typeof IMG !== 'undefined' ? IMG['after-dark-4.jpeg'] : null, score: 84, tones: ['bone','taupe','noir','sand'], pieceIds: ['item-13','item-14','item-21','item-6'] },
-  // Travel
-  { id: 'lib-trv-1', name: 'Long haul', tag: 'Travel', season: 'All season', img: typeof IMG !== 'undefined' ? IMG['in-transit-1.jpeg'] : null, score: 87, tones: ['sand','bone','cream','sage'], pieceIds: ['item-31','item-10','item-30','item-4'] },
-  { id: 'lib-trv-2', name: 'Boarding pass', tag: 'Travel', season: 'All season', img: typeof IMG !== 'undefined' ? IMG['in-transit-2.jpeg'] : null, score: 90, tones: ['bone','sand','cream','noir'], pieceIds: ['item-5','item-10','item-30','item-4'] },
-  { id: 'lib-trv-3', name: 'Carry on', tag: 'Travel', season: 'All season', img: typeof IMG !== 'undefined' ? IMG['in-transit-3.jpeg'] : null, score: 85, tones: ['bone','sand','cream','sage'], pieceIds: ['item-13','item-14','item-30'] },
-  { id: 'lib-trv-4', name: 'Train day', tag: 'Travel', season: 'All season', img: typeof IMG !== 'undefined' ? IMG['in-transit-4.jpeg'] : null, score: 82, tones: ['sand','cream','bone','sage'], pieceIds: ['item-31','item-10','item-30','item-4'] },
+  { id: 'lib-black-tie', name: 'Black Tie Adjacent', tag: 'Evening', season: 'Fall · Winter', img: null, score: 90, tones: ['ember','sand','cream'], pieceIds: ['item-7','item-8','item-6'] },
+  { id: 'lib-quiet-lux', name: 'Quiet Luxury Casual', tag: 'Casual', season: 'Fall · Winter', img: null, score: 88, tones: ['sand','ember','bone','cream'], pieceIds: ['item-25','item-20','item-14','item-3'] },
+  { id: 'lib-resort', name: 'Resort Ready', tag: 'Weekend', season: 'Spring · Summer', img: null, score: 85, tones: ['cream','sand','bone'], pieceIds: ['item-23','item-24','item-18','item-11'] },
+  { id: 'lib-trouble', name: 'Trouble, Politely', tag: 'Evening', season: 'Fall · Winter', img: null, score: 89, tones: ['ember','sand','bone','sky'], pieceIds: ['item-20','item-19','item-2','item-27','item-16','item-21'] },
+  { id: 'lib-calm-summer', name: 'Calm, Cool Summer', tag: 'Casual', season: 'Spring · Summer', img: null, score: 86, tones: ['sand','sage','bone'], pieceIds: ['item-9','item-17','item-28','item-14','item-11'] },
+  { id: 'lib-volume', name: 'Volume Control', tag: 'Work', season: 'Fall · Winter', img: null, score: 87, tones: ['cream','sand','ember'], pieceIds: ['item-31','item-25','item-4','item-1','item-30'] },
 ];
 
 // Default 7-day plan: pick a sensible starter from the library.
 function buildDefaultWeekPlan() {
   const dayDefs = [
-    { day: 'TUE', date: '24', when: 'Today', want: 'lib-work-1', weather: { temp: '72°', cond: 'Sunny',         icon: 'sun' } },
-    { day: 'WED', date: '25', when: null,    want: 'lib-cas-1',  weather: { temp: '70°', cond: 'Partly cloudy',  icon: 'partly' } },
-    { day: 'THU', date: '26', when: null,    want: 'lib-work-3', weather: { temp: '64°', cond: 'Cloudy',         icon: 'cloud' } },
-    { day: 'FRI', date: '27', when: null,    want: 'lib-eve-2',  weather: { temp: '61°', cond: 'Showers',        icon: 'rain' } },
-    { day: 'SAT', date: '28', when: null,    want: 'lib-cas-2',  weather: { temp: '68°', cond: 'Sunny',          icon: 'sun' } },
-    { day: 'SUN', date: '29', when: null,    want: 'lib-wkd-1',  weather: { temp: '73°', cond: 'Sunny',          icon: 'sun' } },
-    { day: 'MON', date: '30', when: null,    want: 'lib-work-2', weather: { temp: '66°', cond: 'Partly cloudy',  icon: 'partly' } },
+    { day: 'TUE', date: '24', when: 'Today', want: 'lib-volume', weather: { temp: '72°', cond: 'Sunny',         icon: 'sun' } },
+    { day: 'WED', date: '25', when: null,    want: 'lib-quiet-lux',  weather: { temp: '70°', cond: 'Partly cloudy',  icon: 'partly' } },
+    { day: 'THU', date: '26', when: null,    want: 'lib-calm-summer', weather: { temp: '64°', cond: 'Cloudy',         icon: 'cloud' } },
+    { day: 'FRI', date: '27', when: null,    want: 'lib-trouble',  weather: { temp: '61°', cond: 'Showers',        icon: 'rain' } },
+    { day: 'SAT', date: '28', when: null,    want: 'lib-resort', weather: { temp: '68°', cond: 'Sunny',          icon: 'sun' } },
+    { day: 'SUN', date: '29', when: null,    want: 'lib-black-tie',  weather: { temp: '73°', cond: 'Sunny',          icon: 'sun' } },
+    { day: 'MON', date: '30', when: null,    want: 'lib-quiet-lux', weather: { temp: '66°', cond: 'Partly cloudy',  icon: 'partly' } },
   ];
   return dayDefs.map(d => {
     const o = OUTFIT_LIBRARY.find(x => x.id === d.want) || OUTFIT_LIBRARY[0];
@@ -8691,44 +8676,18 @@ function ScreenOutfits({ goSearch, goNotifications, goProfile, goAddOutfit, goOu
       tag: 'Evening',
       season: 'Fall · Winter',
       outfits: [
-        { name: 'The dinner column', meta: 'Totême · The Row', img: IMG['after-dark-1.jpeg'], score: 91,
-          pieceIds: ['item-13','item-10','item-21','item-6'] },
-        { name: 'Off the cuff', meta: 'Sandro · M. Nassir', img: IMG['after-dark-2.jpeg'], score: 88,
-          pieceIds: ['item-0','item-21','item-23'] },
-        { name: 'Late table', meta: 'Cos · The Row', img: IMG['after-dark-3.jpeg'], score: 86,
-          pieceIds: ['item-5','item-13','item-10','item-30','item-4'] },
-        { name: 'Quiet champagne', meta: 'Totême · Chanel', img: IMG['after-dark-4.jpeg'], score: 84,
-          pieceIds: ['item-13','item-14','item-21','item-6'] },
-      ],
-    },
-    {
-      cat: 'In Transit',
-      tag: 'Travel',
-      season: 'All season',
-      outfits: [
-        { name: 'Long haul', meta: 'Vince · The Row', img: IMG['in-transit-1.jpeg'], score: 87,
-          pieceIds: ['item-31','item-10','item-30','item-4'] },
-        { name: 'Boarding pass', meta: 'Cos · A.P.C.', img: IMG['in-transit-2.jpeg'], score: 90,
-          pieceIds: ['item-5','item-10','item-30','item-4'] },
-        { name: 'Carry on', meta: 'Totême · Lemaire', img: IMG['in-transit-3.jpeg'], score: 85,
-          pieceIds: ['item-13','item-14','item-30'] },
-        { name: 'Train day', meta: 'The Row · Vince', img: IMG['in-transit-4.jpeg'], score: 82,
-          pieceIds: ['item-31','item-10','item-30','item-4'] },
-      ],
-    },
-    {
-      cat: 'Low Key',
-      tag: 'Weekend',
-      season: 'Spring · Summer',
-      outfits: [
-        { name: 'Saturday errands', meta: 'Vince · Lemaire', img: IMG['low-key-1.jpeg'], score: 79,
-          pieceIds: ['item-31','item-14','item-30','item-4'] },
-        { name: 'Coffee with Anna', meta: 'Sandro · Rohé', img: IMG['low-key-2.jpeg'], score: 83,
-          pieceIds: ['item-0','item-19','item-21','item-23'] },
-        { name: 'Slow Sunday', meta: 'Totême · Lemaire', img: IMG['low-key-3.jpeg'], score: 86,
-          pieceIds: ['item-13','item-14','item-30','item-23'] },
-        { name: 'Beach house', meta: 'Vince · A.P.C.', img: IMG['low-key-4.jpeg'], score: 81,
-          pieceIds: ['item-31','item-13','item-14','item-30','item-4'] },
+        { name: 'Black Tie Adjacent', meta: 'Victoria Beckham · Paris Texas', img: null, score: 90,
+          pieceIds: ['item-7','item-8','item-6'] },
+        { name: 'Quiet Luxury Casual', meta: 'Matteau · The Row', img: null, score: 88,
+          pieceIds: ['item-25','item-20','item-14','item-3'] },
+        { name: 'Resort Ready', meta: 'Lizzie Fortunato · Matteau', img: null, score: 85,
+          pieceIds: ['item-23','item-24','item-18','item-11'] },
+        { name: 'Trouble, Politely', meta: 'Nour Hammour · The Row', img: null, score: 89,
+          pieceIds: ['item-20','item-19','item-2','item-27','item-16','item-21'] },
+        { name: 'Calm, Cool Summer', meta: 'Miu Miu · Anine Bing', img: null, score: 86,
+          pieceIds: ['item-9','item-17','item-28','item-14','item-11'] },
+        { name: 'Volume Control', meta: 'Lisa Yang · Alaïa', img: null, score: 87,
+          pieceIds: ['item-31','item-25','item-4','item-1','item-30'] },
       ],
     },
   ];
