@@ -15,6 +15,12 @@
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&family=Playfair+Display:ital,wght@0,400;0,500;0,600;1,400;1,500&family=EB+Garamond:ital,wght@0,400;0,500;1,400;1,500&family=Inter+Tight:wght@400;500;600&family=Geist:wght@400;500;600&family=Manrope:wght@400;500;600&family=Geist+Mono:wght@400;500&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
   :root { --ui-font: 'Söhne', 'Soehne', 'Inter', 'Inter Tight', system-ui, -apple-system, sans-serif; }
+  @supports not (aspect-ratio: 1 / 1) {
+    [style*="aspect-ratio"] { min-height: 1px; }
+    [style*="aspect-ratio: 1 / 1.15"], [style*="aspect-ratio:1/1.15"] { padding-bottom: 115%; height: 0; }
+    [style*="aspect-ratio: 3/4"], [style*="aspect-ratio: 3 / 4"] { padding-bottom: 133%; height: 0; }
+    [style*="aspect-ratio: 4/5"], [style*="aspect-ratio: 4 / 5"] { padding-bottom: 125%; height: 0; }
+  }
   html, body { margin: 0; padding: 0; background: #0F0E0C; color: #F4EFE6;
     font-family: var(--ui-font);
     -webkit-font-smoothing: antialiased; }
@@ -916,7 +922,7 @@ const LYDIA = {
 // Editorial product placeholder — striped card with mono label
 function PlaceholderCard({
   brand = 'BRAND', item = 'ITEM', tone = 'bone',
-  ratio = '4/5', stripeAngle = 12, style = {}, photo = null, photoId = null,
+  ratio = '4/5', stripeAngle = 12, style = {}, photo = null, photoId = null, bg = null,
 }) {
   const palettes = {
     // ── Light backdrops (must stay light — dark items use multiply blend) ──
@@ -949,7 +955,7 @@ function PlaceholderCard({
         borderRadius: 6, overflow: 'hidden',
         ...style,
       }}>
-        <div style={{ position: 'absolute', inset: 0, background: (photoId && window.LYDIA_IMG_BG && window.LYDIA_IMG_BG[photoId]) || p.bg }} />
+        <div style={{ position: 'absolute', inset: 0, background: bg || (photoId && window.LYDIA_IMG_BG && window.LYDIA_IMG_BG[photoId]) || p.bg }} />
         <img src={photo} alt={`${brand} ${item}`} style={{
           position: 'absolute', inset: 0, width: '100%', height: '100%',
           objectFit: 'contain',
@@ -11386,20 +11392,16 @@ function ConversationView({ thread, onBack, onSend }) {
               </div>
             ) : m.board ? (
               <div style={{ maxWidth: '72%', borderRadius: 16, overflow: 'hidden', border: '0.5px solid var(--hairline, rgba(var(--fg-rgb, 244,239,230), 0.1))', background: 'var(--bg-elev, #171513)' }}>
-                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gridTemplateRows: '1fr 1fr', gap: 2, aspectRatio: '1.6', background: '#EBE4D6' }}>
-                  {(m.board.coverIds || []).slice(0,4).map((id, j) => { const p = itemById[id]; return (
-                    <div key={j} style={{ position: 'relative', overflow: 'hidden', background: '#EBE4D6' }}>
-                      {p && p.photo ? <img src={p.photo} alt="" style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', objectFit: 'cover', mixBlendMode: 'multiply' }} /> : null}
-                    </div>
-                  );})}
+                <div style={{ padding: 10 }}>
+                  <OutfitMosaic pieceIds={m.board.coverIds} itemById={itemById} gap={4} aspect="1.6 / 1" />
                 </div>
                 <div style={{ padding: '10px 12px' }}>
-                  <div style={{ display: 'flex', alignItems: 'center', gap: 6, marginBottom: 2 }}>
-                    <Icon name="users" size={11} color="#A8B59E" stroke={1.6} />
-                    <span style={{ fontFamily: 'var(--ui-font)', fontSize: 8, letterSpacing: '0.1em', textTransform: 'uppercase', color: '#A8B59E' }}>Shared board</span>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: 6, marginBottom: 2, minWidth: 0 }}>
+                    <Icon name="users" size={11} color="#A8B59E" stroke={1.6} style={{ flexShrink: 0 }} />
+                    <span style={{ fontFamily: 'var(--ui-font)', fontSize: 8, letterSpacing: '0.1em', textTransform: 'uppercase', color: '#A8B59E', whiteSpace: 'nowrap' }}>Shared style board</span>
                   </div>
                   <div style={{ fontFamily: 'var(--display-font, "EB Garamond", serif)', fontStyle: 'italic', fontSize: 16, color: 'var(--fg, #F4EFE6)' }}>{m.board.title}</div>
-                  <div style={{ fontFamily: 'var(--ui-font)', fontSize: 8.5, letterSpacing: '0.08em', textTransform: 'uppercase', color: 'rgba(var(--fg-rgb, 244,239,230), 0.5)', marginTop: 3 }}>{m.board.owner} \u00b7 {m.board.pins} pins</div>
+                  <div style={{ fontFamily: 'var(--ui-font)', fontSize: 8.5, letterSpacing: '0.08em', textTransform: 'uppercase', color: 'rgba(var(--fg-rgb, 244,239,230), 0.5)', marginTop: 3 }}>{m.board.owner} · {m.board.pins} pins</div>
                 </div>
                 {m.text && <div style={{ padding: '0 12px 10px', fontFamily: 'Inter Tight, system-ui', fontSize: 13, color: 'var(--fg-2, rgba(var(--fg-rgb, 244,239,230), 0.75))', lineHeight: 1.35 }}>{m.text}</div>}
                 {!m.me && (
@@ -11432,7 +11434,7 @@ function ConversationView({ thread, onBack, onSend }) {
             ) : m.itemShare ? (
               <div style={{ maxWidth: '68%', borderRadius: 16, overflow: 'hidden', border: '0.5px solid var(--hairline, rgba(var(--fg-rgb, 244,239,230), 0.1))', background: 'var(--bg-elev, #171513)' }}>
                 <div style={{ width: '100%' }}>
-                  <PlaceholderCard brand={m.itemShare.brand} item={m.itemShare.item} tone={m.itemShare.tone} ratio="4/3" photo={m.itemShare.photo} style={{ borderRadius: 0 }} />
+                  <PlaceholderCard brand={m.itemShare.brand} item={m.itemShare.item} tone={m.itemShare.tone} ratio="4/3" photo={m.itemShare.photo} bg="#F2EFE9" style={{ borderRadius: 0 }} />
                 </div>
                 <div style={{ padding: '10px 12px 6px', display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 10 }}>
                   <div style={{ minWidth: 0 }}>
@@ -11676,13 +11678,13 @@ function ScreenSocial({ goSearch, goNotifications, goProfile }) {
 
       <div onScroll={(e) => setScrolled(e.target.scrollTop > 4)} style={{ flex: 1, overflowY: 'auto', paddingBottom: 120 }}>
         <div style={{ padding: '4px 20px 14px' }}>
-          <Eyebrow style={{ marginBottom: 10 }}>Friends · shops · boards</Eyebrow>
+          <Eyebrow style={{ marginBottom: 10 }}>Friends · shops · style boards</Eyebrow>
           <Display size={42} italic>Social</Display>
         </div>
 
         {/* segmented control */}
         <div style={{ padding: '0 20px 16px', display: 'flex', gap: 6 }}>
-          {[{ id: 'following', l: 'Following' }, { id: 'messages', l: 'Messages' }, { id: 'boards', l: 'Boards' }].map(s => (
+          {[{ id: 'following', l: 'Following' }, { id: 'messages', l: 'Messages' }, { id: 'boards', l: 'Style Boards' }].map(s => (
             <Pill key={s.id} dark active={sub === s.id} onClick={() => setSub(s.id)}>{s.l}</Pill>
           ))}
         </div>
@@ -11828,24 +11830,19 @@ function ScreenSocial({ goSearch, goNotifications, goProfile }) {
         {sub === 'boards' && (
           <div style={{ padding: '0 20px' }}>
             <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 12 }}>
-              <Eyebrow>Shared boards</Eyebrow>
+              <Eyebrow>Shared Style Boards</Eyebrow>
               <span style={{ fontFamily: 'var(--ui-font)', fontSize: 9, letterSpacing: '0.1em', textTransform: 'uppercase', color: 'rgba(var(--fg-rgb, 244,239,230), 0.4)' }}>Pinterest-synced</span>
             </div>
             <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12 }}>
               {SOCIAL_BOARDS.map(b => {
-                const covers = b.coverIds.map(id => itemById[id]).filter(Boolean).slice(0, 4);
                 return (
                   <div key={b.id} style={{
                     background: 'var(--bg-elev, #171513)',
                     border: '0.5px solid var(--hairline-strong, rgba(var(--fg-rgb, 244,239,230), 0.08))',
                     borderRadius: 14, overflow: 'hidden',
                   }}>
-                    <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gridTemplateRows: '1fr 1fr', gap: 2, aspectRatio: '1', background: '#EBE4D6' }}>
-                      {covers.map((p, i) => (
-                        <div key={i} style={{ position: 'relative', overflow: 'hidden', background: '#EBE4D6' }}>
-                          {p.photo ? <img src={p.photo} alt="" style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', objectFit: 'cover', mixBlendMode: 'multiply' }} /> : null}
-                        </div>
-                      ))}
+                    <div style={{ padding: 8 }}>
+                      <OutfitMosaic pieceIds={b.coverIds} itemById={itemById} gap={3} aspect="1 / 1" />
                     </div>
                     <div style={{ padding: '10px 12px 12px' }}>
                       <div style={{ fontFamily: 'var(--display-font, "EB Garamond", serif)', fontStyle: 'italic', fontSize: 16, color: 'var(--fg, #F4EFE6)', lineHeight: 1.1 }}>{b.title}</div>
