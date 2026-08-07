@@ -6933,13 +6933,30 @@ function ManualBuildWizard({ onSaveDay, onClose, goHome }) {
 
   const dayOffsetOf = (d) => Math.round((new Date(d.getFullYear(), d.getMonth(), d.getDate()) - today) / 86400000);
 
-  const handleSave = () => {
+  const [showExpirySheet, setShowExpirySheet] = React.useState(false);
+
+  const finalizeSave = (alsoToOutfits, expiry) => {
     const offset = selectedDate ? dayOffsetOf(selectedDate) : 0;
     const name = outfitName.trim() || 'My selection';
     onSaveDay(offset, pieceIds, name);
-    setSavedInfo({ date: selectedDate, name, count: pieceIds.length, pieceIds });
+    if (alsoToOutfits) {
+      window.EXTRA_OUTFITS = window.EXTRA_OUTFITS || [];
+      window.EXTRA_OUTFITS.push({
+        name,
+        meta: pieceIds.slice(0, 2).map(pid => itemById[pid]?.brand).filter(Boolean).join(' · '),
+        pieceIds,
+        score: null,
+        expiry: expiry || 'indefinite',
+        savedAt: Date.now(),
+      });
+    }
+    setSavedInfo({ date: selectedDate, name, count: pieceIds.length, pieceIds, savedToOutfits: !!alsoToOutfits, expiry });
+    setShowExpirySheet(false);
     setStep('saved');
   };
+
+  const handleSaveCalendarOnly = () => finalizeSave(false, null);
+  const handleSaveCalendarAndOutfits = () => setShowExpirySheet(true);
 
   const resetForAnother = () => {
     setStep('anchor'); setAnchorId(null); setPieceIds([]); setQuery(''); setOutfitName('');
@@ -7177,9 +7194,18 @@ function ManualBuildWizard({ onSaveDay, onClose, goHome }) {
             <Icon name="check" size={26} color="#A8B59E" stroke={2} />
           </div>
           <Display size={24} italic style={{ marginBottom: 8 }}>Saved to your calendar</Display>
-          <div style={{ fontFamily: 'Inter Tight, system-ui', fontSize: 13.5, color: 'var(--fg-2, rgba(var(--fg-rgb, 244,239,230), 0.65))', lineHeight: 1.5, marginBottom: 34 }}>
+          <div style={{ fontFamily: 'Inter Tight, system-ui', fontSize: 13.5, color: 'var(--fg-2, rgba(var(--fg-rgb, 244,239,230), 0.65))', lineHeight: 1.5, marginBottom: 12 }}>
             {savedInfo.name} · {savedInfo.count} {savedInfo.count === 1 ? 'piece' : 'pieces'} · {savedInfo.date ? savedInfo.date.toLocaleDateString('en-US', { weekday: 'long', month: 'short', day: 'numeric' }) : 'Today'}
           </div>
+          {savedInfo.savedToOutfits && (
+            <div style={{ display: 'flex', alignItems: 'center', gap: 6, background: 'rgba(168,181,158,0.14)', borderRadius: 999, padding: '6px 14px', marginBottom: 34 }}>
+              <Icon name="check" size={11} color="#A8B59E" stroke={2} />
+              <span style={{ fontFamily: 'var(--ui-font)', fontSize: 9.5, letterSpacing: '0.1em', textTransform: 'uppercase', color: '#A8B59E' }}>
+                Added to Outfits · {savedInfo.expiry === 'week' ? 'expires in 7 days' : 'kept indefinitely'}
+              </span>
+            </div>
+          )}
+          {!savedInfo.savedToOutfits && <div style={{ marginBottom: 22 }} />}
           <div style={{ width: '100%', display: 'flex', flexDirection: 'column', gap: 10 }}>
             <button onClick={resetForAnother} style={{
               appearance: 'none', cursor: 'pointer', width: '100%', padding: '15px', borderRadius: 14, border: 0,
@@ -7214,15 +7240,64 @@ function ManualBuildWizard({ onSaveDay, onClose, goHome }) {
             }}>Preview & save</button>
           )}
           {step === 'confirm' && (
-            <button onClick={handleSave} style={{
-              appearance: 'none', cursor: 'pointer', width: '100%', padding: '16px', borderRadius: 14, border: 0,
-              background: '#C8553D', color: '#F4EFE6', fontFamily: 'var(--ui-font)', fontSize: 11, letterSpacing: '0.14em', textTransform: 'uppercase',
-              display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8,
-            }}>
-              <Icon name="check" size={14} color="#F4EFE6" stroke={1.8} />
-              Save to calendar
-            </button>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
+              <button onClick={handleSaveCalendarAndOutfits} style={{
+                appearance: 'none', cursor: 'pointer', width: '100%', padding: '16px', borderRadius: 14, border: 0,
+                background: '#C8553D', color: '#F4EFE6', fontFamily: 'var(--ui-font)', fontSize: 11, letterSpacing: '0.14em', textTransform: 'uppercase',
+                display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8,
+              }}>
+                <Icon name="check" size={14} color="#F4EFE6" stroke={1.8} />
+                Save to Calendar and Outfits
+              </button>
+              <button onClick={handleSaveCalendarOnly} style={{
+                appearance: 'none', cursor: 'pointer', width: '100%', padding: '16px', borderRadius: 14,
+                border: '0.5px solid var(--hairline-strong, rgba(var(--fg-rgb, 244,239,230), 0.14))', background: 'transparent',
+                color: 'var(--fg, #F4EFE6)', fontFamily: 'var(--ui-font)', fontSize: 11, letterSpacing: '0.14em', textTransform: 'uppercase',
+              }}>Save to Calendar</button>
+            </div>
           )}
+        </div>
+      )}
+      {showExpirySheet && (
+        <div style={{ position: 'absolute', inset: 0, zIndex: 120, display: 'flex', flexDirection: 'column', justifyContent: 'flex-end' }}>
+          <div onClick={() => setShowExpirySheet(false)} style={{ position: 'absolute', inset: 0, background: 'rgba(0,0,0,0.55)', backdropFilter: 'blur(8px)' }} />
+          <div style={{
+            position: 'relative', background: 'var(--bg, #0A0908)',
+            borderTopLeftRadius: 22, borderTopRightRadius: 22,
+            border: '0.5px solid rgba(var(--fg-rgb, 244,239,230), 0.08)', borderBottom: 0,
+            display: 'flex', flexDirection: 'column',
+          }}>
+            <div style={{ display: 'flex', justifyContent: 'center', padding: '10px 0 6px' }}>
+              <div style={{ width: 36, height: 4, borderRadius: 2, background: 'rgba(var(--fg-rgb, 244,239,230), 0.18)' }} />
+            </div>
+            <div style={{ padding: '0 20px 6px' }}>
+              <Display size={20} italic>How long should this live in Outfits?</Display>
+            </div>
+            <div style={{ padding: '0 20px 24px', display: 'flex', flexDirection: 'column', gap: 8 }}>
+              <button onClick={() => finalizeSave(true, 'week')} style={{
+                appearance: 'none', cursor: 'pointer', width: '100%', textAlign: 'left',
+                display: 'flex', alignItems: 'center', gap: 12, padding: '14px 14px',
+                background: 'var(--bg-elev, #171513)', border: '0.5px solid var(--hairline-strong, rgba(var(--fg-rgb, 244,239,230), 0.08))', borderRadius: 12,
+              }}>
+                <Icon name="clock" size={16} color="#A8B59E" stroke={1.5} />
+                <div>
+                  <div style={{ fontFamily: 'Inter Tight, system-ui', fontSize: 14, color: 'var(--fg, #F4EFE6)' }}>Just for this week</div>
+                  <div style={{ fontFamily: 'Inter Tight, system-ui', fontSize: 11.5, color: 'var(--fg-3, rgba(var(--fg-rgb, 244,239,230), 0.5))', marginTop: 2 }}>Removed from Outfits after 7 days</div>
+                </div>
+              </button>
+              <button onClick={() => finalizeSave(true, 'indefinite')} style={{
+                appearance: 'none', cursor: 'pointer', width: '100%', textAlign: 'left',
+                display: 'flex', alignItems: 'center', gap: 12, padding: '14px 14px',
+                background: 'var(--bg-elev, #171513)', border: '0.5px solid var(--hairline-strong, rgba(var(--fg-rgb, 244,239,230), 0.08))', borderRadius: 12,
+              }}>
+                <Icon name="archive" size={16} color="#A8B59E" stroke={1.5} />
+                <div>
+                  <div style={{ fontFamily: 'Inter Tight, system-ui', fontSize: 14, color: 'var(--fg, #F4EFE6)' }}>Keep indefinitely</div>
+                  <div style={{ fontFamily: 'Inter Tight, system-ui', fontSize: 11.5, color: 'var(--fg-3, rgba(var(--fg-rgb, 244,239,230), 0.5))', marginTop: 2 }}>Stays in your Outfits library</div>
+                </div>
+              </button>
+            </div>
+          </div>
         </div>
       )}
     </div>
@@ -9090,7 +9165,7 @@ function ScreenOutfits({ goSearch, goNotifications, goProfile, goAddOutfit, goOu
   ];
 
   // Saved looks (mutable — generate-new-look + accept-suggestion add to this)
-  const [savedExtra, setSavedExtra] = React.useState([]);
+  const [savedExtra, setSavedExtra] = React.useState(() => (window.EXTRA_OUTFITS || []).map(o => ({ ...o, meta: o.meta || '' })));
 
   // Lookup by id from WARDROBE_ITEMS for piece thumbnails
   const itemById = React.useMemo(() => {
